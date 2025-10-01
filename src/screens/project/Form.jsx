@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
-import { saveProject, saveTender, uploadProjectFiles, uploadTenderFiles, createBasics, updateBasics, getBasics, getProject, getTender } from "../../api/client";
+import { saveProject, saveTender, updateProject, updateTender, uploadProjectFiles, uploadTenderFiles, createBasics, updateBasics, getBasics, getProject, getTender } from "../../api/client";
 import { useToast } from "../../components/ToastContainer";
 
 const Forms = () => {
@@ -256,68 +256,65 @@ const Forms = () => {
   // Function to transform form data to project structure (matching API expectations)
   const transformToProjectForm = (data) => {
     return {
-      projectNo: data.srNoOrUniqueProjectNo || data.internalProjectNo || '',
-      formOfPsd: data.formOfPsd || 'BG',
-      dateOfLoa: data.dateOfLoaLoi || '',
-      psdBgFdrValidity: data.psdBgFdrValidity || '',
-      additionalSecurityDeposit: data.additionalSecurityDeposit || '',
-      psdBgFdrStatus: data.psdBgFdrStatus || 'Not Returned',
-      asdActualReturnDate: data.asdActualReturnDate || '',
-      startingDate: data.startingDateOfProject || '',
-      asdPlannedReturnDate: data.asdPlannedReturnDate || '',
-      completionDate: data.completionDateAsPerWorkOrder || '',
-      psdBgFdrActualDate: data.psdBgFdrActualDate || '',
-      workOrderValue: data.valueOfContractOrWorkOrder || data.costOfWork || '',
-      psdBgFdrIssuedInFavorOf: data.psdBgFdrIssuedInFavorOf || '',
-      nameOfWork: data.nameOfWork || data.projectName || '',
-      dateOfWorkOrder: data.dateOfWorkOrder || '',
-      durationOfProject: data.durationOfProject || '',
-      actualDateOfCompletion: data.actualDateOfCompletion || '',
-      dateOfAmendment: data.dateOfAmendment || '',
-      remarks: data.projectRemarks || '',
-      asdBgFdrValidity: data.asdBgFdrValidity || '',
-      workCompletionCertificateTaken: data.workCompletionCertificateTaken || 'No',
-      performanceSecurityDeposit: data.performanceSecurityDeposit || '',
-      psdBgFdrNo: data.psdBgFdrNo || '',
-      revisedWorkOrder: data.workOrderAfterVariation || '',
-      asdBgFdrIssuedInFavorOf: data.asdBgFdrIssuedInFavorOf || '',
-      psdBgFdrReturnDate: data.psdBgFdrReturnDate || '',
-      defectsLiabilityPeriod: data.defectsLiabilityPeriod || '',
-      dlpEndDate: data.dlpEndDate || ''
+      name_of_work: data.nameOfWork || data.projectName || '',
+      project_no: data.srNoOrUniqueProjectNo || data.internalProjectNo || '',
+      form_of_psd: data.formOfPsd || 'BG',
+      date_of_loa: data.dateOfLoaLoi || '',
+      psd_bg_fdr_validity: data.psdBgFdrValidity || '',
+      additional_security_deposit: data.additionalSecurityDeposit || '',
+      psd_bg_fdr_status: data.psdBgFdrStatus || 'Not Returned',
+      asd_actual_return_date: data.asdActualReturnDate || '',
+      starting_date: data.startingDateOfProject || '',
+      asd_planned_return_date: data.asdPlannedReturnDate || '',
+      completion_date: data.completionDateAsPerWorkOrder || '',
+      psd_bg_fdr_actual_date: data.psdBgFdrActualDate || '',
+      work_order_value: data.valueOfContractOrWorkOrder || data.costOfWork || '',
+      psd_bg_fdr_issued_in_favor_of: data.psdBgFdrIssuedInFavorOf || '',
+      date_of_work_order: data.dateOfWorkOrder || '',
+      duration_of_project_months: data.durationOfProject || '',
+      actual_date_of_completion: data.actualDateOfCompletion || '',
+      date_of_amendment: data.dateOfAmendment || '',
+      asd_bg_fdr_validity: data.asdBgFdrValidity || '',
+      performance_security_deposit: data.performanceSecurityDeposit || '',
+      work_completion_certificate_taken: data.workCompletionCertificateTaken || 'No',
+      psd_bg_fdr_no: data.psdBgFdrNo || '',
+      work_order_after_variation: data.workOrderAfterVariation || '',
+      asd_bg_fdr_issued_in_favor_of: data.asdBgFdrIssuedInFavorOf || '',
+      defects_liability_period_months: data.defectsLiabilityPeriod || '',
+      psd_bg_fdr_return_date: data.psdBgFdrReturnDate || '',
+      dlp_end_date: data.dlpEndDate || '',
+      remarks: data.projectRemarks || ''
     }
   }
 
   // Function to transform form data to tender structure (matching API expectations)
   const transformToTenderForm = (data) => {
     return {
-      uniqueTenderNo: data.uniqueTenderNo || '',
-      tenderId: data.tenderId || '',
-      formOfTenderDocumentsFee: data.formOfTenderDocumentsFee || 'ONLINE',
-      formOfEmd: data.formOfEmd || 'ONLINE',
-      emdBgFdrValidityDate: data.emdBgFdrValidityDate || '',
-      emdBgFdrStatus: data.emdBgFdrStatus || '',
-      completionPeriod: data.completionPeriod || '',
-      lastDateOfSubmission: data.lastDateOfSubmission || '',
-      bidOpeningDate: data.bidOpeningDate || '',
-      physicallyNeededDocuments: data.physicallyNeededDocuments || '',
-      pfeplJvShare: data.pfeplJvShare || '',
-      noOfBidsSubmitted: data.noOfBidsSubmitted || '',
-      bidsSubmitted: data.bidsSubmitted || 'No',
-      costOfWork: data.costOfWork || data.valueOfContractOrWorkOrder || '',
-      tenderDocumentsFee: data.tenderDocumentsFee || '',
-      emdAmount: data.emdAmount || '',
-      emdBgFdrNo: data.emdBgFdrNo || '',
-      emdBgFdrIssuedInFavorOf: data.emdBgFdrIssuedInFavorOf || '',
-      emdBgFdrStatusDate: data.emdBgFdrStatusDate || '',
-      emdBgFdrDueDate: data.emdBgFdrDueDate || '',
-      preBidMeetingDate: data.preBidMeetingDate || '',
-      physicalDocumentSubmissionDueDate: data.physicalDocumentSubmissionDueDate || '',
-      selfJvType: data.selfJvType || 'Self',
-      bidSubmissionDate: data.bidSubmissionDate || '',
-      totalExpensesIncurred: data.totalExpensesIncurred || '',
-      completionPeriodMonths: data.completionPeriodMonths || '',
+      name_of_work: data.projectName || data.nameOfWork || '',
+      unique_tender_no: data.uniqueTenderNo || '',
+      tender_id_display: data.tenderId || '',
+      cost_of_work_cr: data.costOfWork || data.valueOfContractOrWorkOrder || '',
+      tender_document_fee: data.tenderDocumentsFee || '',
+      form_of_tender_documents_fee: data.formOfTenderDocumentsFee || 'ONLINE',
+      emd_amount_cr: data.emdAmount || '',
+      form_of_emd: data.formOfEmd || 'ONLINE',
+      emd_bg_fdr_no: data.emdBgFdrNo || '',
+      emd_bg_fdr_issued_in_favor_of: data.emdBgFdrIssuedInFavorOf || '',
+      emd_bg_fdr_status_date: data.emdBgFdrStatusDate || '',
+      emd_bg_fdr_due_date: data.emdBgFdrDueDate || '',
+      pre_bid_meeting_date: data.preBidMeetingDate || '',
+      physical_doc_submission_due: data.physicalDocumentSubmissionDueDate || '',
+      bid_opening_date: data.bidOpeningDate || '',
+      self_jv_type: data.selfJvType || 'Self',
+      physically_needed_documents: data.physicallyNeededDocuments || '',
+      bid_submission_date: data.bidSubmissionDate || '',
+      pfepl_jv_share_percent: data.pfeplJvShare || '',
+      total_expenses_against_bid: data.totalExpensesIncurred || '',
+      number_of_bids_submitted: data.noOfBidsSubmitted || '',
+      completion_period_months: data.completionPeriodMonths || '',
       remarks: data.remarks || '',
-      status: data.status || 'Bidding Pending'
+      bids_submitted: data.bidsSubmitted || 'No',
+      status_: data.status || 'Bidding Pending'
     }
   }
 
@@ -327,7 +324,6 @@ const Forms = () => {
     
     try {
       setIsSaving(true);
-      const basicsId = parseInt(id);
       
       // Determine which sections have data (save both when present)
       const tenderKeys = [
@@ -357,23 +353,49 @@ const Forms = () => {
       };
       
       console.log('Saving basic data:', basicData);
-      let actualBasicsId = basicsId;
-      try {
-        await updateBasics(basicsId, basicData);
-        console.log('Updated existing basic record with ID:', basicsId);
-      } catch (error) {
-        console.log('Update failed, creating new record. Error:', error.message);
-        // If update fails, try to create new record
+      let actualBasicsId;
+      
+      // Check if this is a new record or existing one
+      if (isNew || id === 'new') {
+        // Create new record
+        console.log('Creating new basic record...');
         const result = await createBasics(basicData);
         actualBasicsId = result.id;
         console.log('Created new basic record with ID:', actualBasicsId);
+      } else {
+        // Update existing record
+        const basicsId = parseInt(id);
+        if (isNaN(basicsId)) {
+          throw new Error('Invalid ID format');
+        }
+        try {
+          await updateBasics(basicsId, basicData);
+          actualBasicsId = basicsId;
+          console.log('Updated existing basic record with ID:', basicsId);
+        } catch (error) {
+          console.log('Update failed, creating new record. Error:', error.message);
+          // If update fails, try to create new record
+          const result = await createBasics(basicData);
+          actualBasicsId = result.id;
+          console.log('Created new basic record with ID:', actualBasicsId);
+        }
       }
       
       // Then save to specific table(s)
       if (hasTender) {
         const tenderData = transformToTenderForm(formData);
-        await saveTender(actualBasicsId, tenderData);
-        console.log("tender", tenderData);
+        
+        // Check if tender exists for this basics_id
+        try {
+          await getTender(actualBasicsId);
+          // If it exists, update it
+          await updateTender(actualBasicsId, tenderData);
+          console.log('Updated tender data:', tenderData);
+        } catch (error) {
+          // If it doesn't exist, create it
+          await saveTender(actualBasicsId, tenderData);
+          console.log('Created tender data:', tenderData);
+        }
         
         // Upload files if any
         if (formData.attachments && formData.attachments.length > 0) {
@@ -391,8 +413,18 @@ const Forms = () => {
         const projectData = transformToProjectForm(formData);
         console.log('Saving project data:', projectData);
         console.log('Basics ID:', actualBasicsId);
-        await saveProject(actualBasicsId, projectData);
-        console.log('Project data saved successfully');
+        
+        // Check if project exists for this basics_id
+        try {
+          await getProject(actualBasicsId);
+          // If it exists, update it
+          await updateProject(actualBasicsId, projectData);
+          console.log('Updated project data');
+        } catch (error) {
+          // If it doesn't exist, create it
+          await saveProject(actualBasicsId, projectData);
+          console.log('Created project data');
+        }
         
         // Upload files if any
         if (formData.projectAttachments && formData.projectAttachments.length > 0) {
