@@ -36,10 +36,14 @@ export default async function handler(req, res) {
         
         const { project_work_name: updateName, internal_project_no: updateNo, type_of_project: updateType, department_authority: updateDept, year: updateYear } = req.body
         
-        await pool.query(
+        const [updateResult] = await pool.query(
           'UPDATE basics_shared SET project_work_name = ?, internal_project_no = ?, type_of_project = ?, department_authority = ?, year = ? WHERE id = ?',
           [updateName, updateNo, updateType, updateDept, updateYear, req.query.id]
         )
+        
+        if (updateResult.affectedRows === 0) {
+          return res.status(404).json({ error: 'Record not found' })
+        }
         
         return res.json({ id: req.query.id, ...req.body })
 
