@@ -11,7 +11,7 @@ export default async function handler(req, res) {
   try {
     switch (method) {
       case 'GET':
-        const [rows] = await pool.query('SELECT * FROM basics WHERE id = ?', [id])
+        const [rows] = await pool.query('SELECT * FROM basics_shared WHERE id = ?', [id])
         if (rows.length === 0) {
           return res.status(404).json({ error: 'Record not found' })
         }
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         const { project_work_name, internal_project_no, type_of_project, department_authority, year } = req.body
         
         await pool.query(
-          'UPDATE basics SET project_work_name = ?, internal_project_no = ?, type_of_project = ?, department_authority = ?, year = ? WHERE id = ?',
+          'UPDATE basics_shared SET project_work_name = ?, internal_project_no = ?, type_of_project = ?, department_authority = ?, year = ? WHERE id = ?',
           [project_work_name, internal_project_no, type_of_project, department_authority, year, id]
         )
         
