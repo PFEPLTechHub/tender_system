@@ -3,25 +3,14 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "functions": {
-    "server/server.js": {
-      "memory": 1024,
-      "maxDuration": 10
+    "api/**/*.js": {
+      "runtime": "nodejs18.x"
     }
   },
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "/server/server.js"
-    },
-    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ],
-  "env": {
-    "DB_HOST": "@db_host",
-    "DB_USER": "@db_user",
-    "DB_PASS": "@db_pass",
-    "DB_NAME": "@db_name"
-  }
+  ]
 }
