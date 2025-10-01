@@ -17,6 +17,7 @@ export const updateBasics = (id, payload) => http('PUT', `/api/basics/${id}`, pa
 
 export const getTender = (basicsId) => http('GET', `/api/tenders/${basicsId}`)
 export const saveTender = (basicsId, payload) => http('POST', `/api/tenders/${basicsId}`, payload)
+export const updateTender = (basicsId, payload) => http('PUT', `/api/tenders/${basicsId}`, payload)
 export const uploadTenderFiles = (basicsId, fileList) => {
   const form = new FormData()
   Array.from(fileList || []).forEach(f => form.append('files', f))
@@ -25,6 +26,7 @@ export const uploadTenderFiles = (basicsId, fileList) => {
 
 export const getProject = (basicsId) => http('GET', `/api/projects/${basicsId}`)
 export const saveProject = (basicsId, payload) => http('POST', `/api/projects/${basicsId}`, payload)
+export const updateProject = (basicsId, payload) => http('PUT', `/api/projects/${basicsId}`, payload)
 export const uploadProjectFiles = (basicsId, fileList) => {
   const form = new FormData()
   Array.from(fileList || []).forEach(f => form.append('files', f))
