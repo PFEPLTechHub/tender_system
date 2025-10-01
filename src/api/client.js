@@ -1,4 +1,5 @@
-const BASE = (import.meta.env.VITE_API_URL) || (window.location.hostname === 'localhost' ? 'http://localhost:5175' : '')
+// Use localhost for development, empty string for production (Vercel)
+const BASE = window.location.hostname === 'localhost' ? 'http://localhost:5175' : ''
 
 async function http(method, path, body, isForm) {
   const res = await fetch(`${BASE}${path}`, {
