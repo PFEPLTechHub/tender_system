@@ -8,14 +8,14 @@ export default async function handler(req, res) {
       case 'GET':
         if (req.query.id) {
           // Get single basic record
-          const [rows] = await pool.query('SELECT * FROM basics WHERE id = ?', [req.query.id])
+          const [rows] = await pool.query('SELECT * FROM basics_shared WHERE id = ?', [req.query.id])
           if (rows.length === 0) {
             return res.status(404).json({ error: 'Record not found' })
           }
           return res.json(rows[0])
         } else {
           // Get all basic records
-          const [rows] = await pool.query('SELECT * FROM basics ORDER BY id DESC')
+          const [rows] = await pool.query('SELECT * FROM basics_shared ORDER BY id DESC')
           return res.json(rows)
         }
 
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
         const { project_work_name, internal_project_no, type_of_project, department_authority, year } = req.body
         
         const [result] = await pool.query(
-          'INSERT INTO basics (project_work_name, internal_project_no, type_of_project, department_authority, year) VALUES (?, ?, ?, ?, ?)',
+          'INSERT INTO basics_shared (project_work_name, internal_project_no, type_of_project, department_authority, year) VALUES (?, ?, ?, ?, ?)',
           [project_work_name, internal_project_no, type_of_project, department_authority, year]
         )
         
@@ -37,7 +37,7 @@ export default async function handler(req, res) {
         const { project_work_name: updateName, internal_project_no: updateNo, type_of_project: updateType, department_authority: updateDept, year: updateYear } = req.body
         
         await pool.query(
-          'UPDATE basics SET project_work_name = ?, internal_project_no = ?, type_of_project = ?, department_authority = ?, year = ? WHERE id = ?',
+          'UPDATE basics_shared SET project_work_name = ?, internal_project_no = ?, type_of_project = ?, department_authority = ?, year = ? WHERE id = ?',
           [updateName, updateNo, updateType, updateDept, updateYear, req.query.id]
         )
         
