@@ -2,13 +2,39 @@
 const BASE = window.location.hostname === 'localhost' ? 'http://localhost:5175' : ''
 
 async function http(method, path, body, isForm) {
-  const res = await fetch(`${BASE}${path}`, {
-    method,
-    headers: isForm ? undefined : { 'Content-Type': 'application/json' },
-    body: body ? (isForm ? body : JSON.stringify(body)) : undefined,
-  })
-  if (!res.ok) throw new Error(await res.text())
-  return res.json()
+  const started = Date.now();
+  const url = `${BASE}${path}`;
+  
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: isForm ? undefined : { 'Content-Type': 'application/json' },
+      body: body ? (isForm ? body : JSON.stringify(body)) : undefined,
+    });
+    
+    const text = await res.text();
+    const took = Date.now() - started;
+    
+    if (!res.ok) {
+      const snippet = text.slice(0, 500);
+      console.error(`❌ HTTP ${res.status} ${method} ${url} (${took}ms)`, {
+        status: res.status,
+        statusText: res.statusText,
+        headers: Object.fromEntries(res.headers.entries()),
+        body: snippet
+      });
+      throw new Error(`HTTP ${res.status}: ${snippet}`);
+    }
+    
+    console.log(`✓ ${method} ${url} → ${res.status} (${took}ms)`);
+    
+    const contentType = res.headers.get('content-type') || '';
+    return contentType.includes('application/json') ? (text ? JSON.parse(text) : null) : text;
+  } catch (err) {
+    const took = Date.now() - started;
+    console.error(`💥 NETWORK ERROR ${method} ${url} (${took}ms):`, err);
+    throw err;
+  }
 }
 
 export const getBasics = (id) => http('GET', `/api/basics/${id}`)
