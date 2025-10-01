@@ -1,13 +1,15 @@
 // Centralized API for basics resource
 // Single source of truth for resource name and CRUD operations
 
+// Use localhost for development, empty string for production (Vercel)
+const BASE = window.location.hostname === 'localhost' ? 'http://localhost:5175' : '';
 const RESOURCE = 'basics'; // central resource name
 
 /**
  * Create a new basic record
  */
 export async function createBasic(payload) {
-  const res = await fetch(`/api/${RESOURCE}`, {
+  const res = await fetch(`${BASE}/api/${RESOURCE}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
@@ -29,7 +31,7 @@ export async function readBasic(id) {
     throw new Error(`Invalid ID for read: ${id}`);
   }
   
-  const res = await fetch(`/api/${RESOURCE}/${id}`, {
+  const res = await fetch(`${BASE}/api/${RESOURCE}/${id}`, {
     method: 'GET'
   });
   
@@ -49,7 +51,7 @@ export async function updateBasic(id, payload) {
     throw new Error(`Invalid ID for update: ${id}`);
   }
   
-  const res = await fetch(`/api/${RESOURCE}/${id}`, {
+  const res = await fetch(`${BASE}/api/${RESOURCE}/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
