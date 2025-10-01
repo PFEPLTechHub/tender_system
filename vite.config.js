@@ -7,11 +7,14 @@ export default defineConfig({
     jsxRuntime: 'automatic'
   })],
   build: {
-    sourcemap: false,
+    sourcemap: true, // Enable source maps for better debugging
     rollupOptions: {
       output: {
         manualChunks: undefined
       }
     }
+  },
+  resolve: {
+    dedupe: ['react', 'react-dom'] // Prevent multiple React copies
   }
 })
