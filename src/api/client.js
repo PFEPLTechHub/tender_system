@@ -1,4 +1,4 @@
-const BASE = (import.meta.env.VITE_API_URL) || 'http://srv1006127.hstgr.cloud'
+const BASE = (import.meta.env.VITE_API_URL) || (window.location.hostname === 'localhost' ? 'http://localhost:5175' : '')
 
 async function http(method, path, body, isForm) {
   const res = await fetch(`${BASE}${path}`, {
