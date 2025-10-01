@@ -11,21 +11,23 @@ export default async function handler(req, res) {
   try {
     switch (method) {
       case 'GET':
-        const [rows] = await pool.query('SELECT * FROM basics_shared WHERE id = ?', [id])
+        const [rows] = await pool.query('SELECT * FROM project_details WHERE basics_id = ?', [id])
         if (rows.length === 0) {
           return res.status(404).json({ error: 'Record not found' })
         }
         return res.json(rows[0])
 
-      case 'PUT':
-        const { project_work_name, internal_project_no, type_of_project, department_authority, year } = req.body
+      case 'POST':
+        const projectData = req.body
         
-        await pool.query(
-          'UPDATE basics_shared SET project_work_name = ?, internal_project_no = ?, type_of_project = ?, department_authority = ?, year = ? WHERE id = ?',
-          [project_work_name, internal_project_no, type_of_project, department_authority, year, id]
+        const [result] = await pool.query(
+          'INSERT INTO project_details (basics_id, name_of_work, project_no, form_of_psd, date_of_loa, psd_bg_fdr_validity, additional_security_deposit, psd_bg_fdr_status, asd_actual_return_date, starting_date, asd_planned_return_date, completion_date, psd_bg_fdr_actual_date, work_order_value, psd_bg_fdr_issued_in_favor_of, date_of_work_order, duration_of_project_months, actual_date_of_completion, date_of_amendment, asd_bg_fdr_validity, performance_security_deposit, work_completion_certificate_taken, psd_bg_fdr_no, work_order_after_variation, asd_bg_fdr_issued_in_favor_of, defects_liability_period_months, psd_bg_fdr_return_date, dlp_end_date, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+          [
+            id, projectData.name_of_work, projectData.project_no, projectData.form_of_psd, projectData.date_of_loa, projectData.psd_bg_fdr_validity, projectData.additional_security_deposit, projectData.psd_bg_fdr_status, projectData.asd_actual_return_date, projectData.starting_date, projectData.asd_planned_return_date, projectData.completion_date, projectData.psd_bg_fdr_actual_date, projectData.work_order_value, projectData.psd_bg_fdr_issued_in_favor_of, projectData.date_of_work_order, projectData.duration_of_project_months, projectData.actual_date_of_completion, projectData.date_of_amendment, projectData.asd_bg_fdr_validity, projectData.performance_security_deposit, projectData.work_completion_certificate_taken, projectData.psd_bg_fdr_no, projectData.work_order_after_variation, projectData.asd_bg_fdr_issued_in_favor_of, projectData.defects_liability_period_months, projectData.psd_bg_fdr_return_date, projectData.dlp_end_date, projectData.remarks
+          ]
         )
         
-        return res.json({ id, ...req.body })
+        return res.json({ id: result.insertId, basics_id: id, ...projectData })
 
       default:
         return res.status(405).json({ error: 'Method not allowed' })
