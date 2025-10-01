@@ -58,6 +58,48 @@ export default async function handler(req, res) {
         
         return res.json({ id: result.insertId, basics_id: id, ...projectData })
 
+      case 'PUT':
+        const updateData = req.body || {}
+        console.log('Updating project for basics_id:', id, 'with data:', updateData)
+        
+        await pool.query(
+          'UPDATE project_details SET name_of_work = ?, project_no = ?, form_of_psd = ?, date_of_loa = ?, psd_bg_fdr_validity = ?, additional_security_deposit = ?, psd_bg_fdr_status = ?, asd_actual_return_date = ?, starting_date = ?, asd_planned_return_date = ?, completion_date = ?, psd_bg_fdr_actual_date = ?, work_order_value = ?, psd_bg_fdr_issued_in_favor_of = ?, date_of_work_order = ?, duration_of_project_months = ?, actual_date_of_completion = ?, date_of_amendment = ?, asd_bg_fdr_validity = ?, performance_security_deposit = ?, work_completion_certificate_taken = ?, psd_bg_fdr_no = ?, work_order_after_variation = ?, asd_bg_fdr_issued_in_favor_of = ?, defects_liability_period_months = ?, psd_bg_fdr_return_date = ?, dlp_end_date = ?, remarks = ? WHERE basics_id = ?',
+          [
+            updateData.name_of_work || null, 
+            updateData.project_no || null, 
+            updateData.form_of_psd || null, 
+            updateData.date_of_loa || null, 
+            updateData.psd_bg_fdr_validity || null, 
+            updateData.additional_security_deposit || null, 
+            updateData.psd_bg_fdr_status || null, 
+            updateData.asd_actual_return_date || null, 
+            updateData.starting_date || null, 
+            updateData.asd_planned_return_date || null, 
+            updateData.completion_date || null, 
+            updateData.psd_bg_fdr_actual_date || null, 
+            updateData.work_order_value || null, 
+            updateData.psd_bg_fdr_issued_in_favor_of || null, 
+            updateData.date_of_work_order || null, 
+            updateData.duration_of_project_months || null, 
+            updateData.actual_date_of_completion || null, 
+            updateData.date_of_amendment || null, 
+            updateData.asd_bg_fdr_validity || null, 
+            updateData.performance_security_deposit || null, 
+            updateData.work_completion_certificate_taken || null, 
+            updateData.psd_bg_fdr_no || null, 
+            updateData.work_order_after_variation || null, 
+            updateData.asd_bg_fdr_issued_in_favor_of || null, 
+            updateData.defects_liability_period_months || null, 
+            updateData.psd_bg_fdr_return_date || null, 
+            updateData.dlp_end_date || null, 
+            updateData.remarks || null,
+            id
+          ]
+        )
+        
+        console.log('Project updated for basics_id:', id)
+        return res.json({ basics_id: id, ...updateData })
+
       default:
         return res.status(405).json({ error: 'Method not allowed' })
     }
