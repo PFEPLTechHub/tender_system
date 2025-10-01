@@ -2,7 +2,7 @@
 // Single source of truth for resource name and CRUD operations
 
 // Use localhost for development, empty string for production (Vercel)
-const BASE = window.location.hostname === 'localhost' ? 'http://srv1006127.hstgr.cloud' : '';
+const BASE = window.location.hostname === 'localhost' ? 'http://localhost:5175' : '';
 const RESOURCE = 'basics'; // central resource name
 
 /**
