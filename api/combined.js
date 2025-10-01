@@ -6,10 +6,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Get all data from basics, tenders, and projects tables
-    const [basics] = await pool.query('SELECT * FROM basics ORDER BY id DESC')
-    const [tenders] = await pool.query('SELECT * FROM tenders ORDER BY id DESC')
-    const [projects] = await pool.query('SELECT * FROM projects ORDER BY id DESC')
+    // Get all data from basics_shared, tender_details, and project_details tables
+    const [basics] = await pool.query('SELECT * FROM basics_shared ORDER BY id DESC')
+    const [tenders] = await pool.query('SELECT * FROM tender_details ORDER BY basics_id DESC')
+    const [projects] = await pool.query('SELECT * FROM project_details ORDER BY basics_id DESC')
 
     // Combine data
     const combined = []
