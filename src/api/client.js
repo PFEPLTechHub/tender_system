@@ -1,5 +1,5 @@
 // Use localhost for development, empty string for production (Vercel)
-const BASE = window.location.hostname === 'localhost' ? 'http://srv1006127.hstgr.cloud' : ''
+const BASE = window.location.hostname === 'localhost' ? 'https://srv1006127.hstgr.cloud' : ''
 
 async function http(method, path, body, isForm) {
   const started = Date.now();
